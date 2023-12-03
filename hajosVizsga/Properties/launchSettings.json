@@ -10,10 +10,10 @@
   },
   "profiles": {
     "hajosVizsga": {
-      "commandName": "Project",
+      "commandName": "hajo.html",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      //"launchUrl": "swagger",
       "applicationUrl": "https://localhost:7220;http://localhost:5231",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "hajo.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
