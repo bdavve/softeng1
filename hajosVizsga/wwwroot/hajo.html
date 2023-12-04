@@ -93,6 +93,9 @@
             background-color: indianred;
             color: darkred;
         }
+        .rejtett{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -102,18 +105,88 @@
         </div>
         <div id="középső">
             <div id="válaszok">
-                <div id="válasz1" class="kerdes kattintható">Válasz 1</div>
-                <div id="válasz2" class="kerdes kattintható">Válasz 2</div>
-                <div id="válasz3" class="kerdes kattintható">Válasz 3</div>
+                <div id="válasz1" onclick="választás(1)" class="kerdes kattintható">Válasz 1</div>
+                <div id="válasz2" onclick="választás(2)" class="kerdes kattintható">Válasz 2</div>
+                <div id="válasz3" onclick="választás(3)" class="kerdes kattintható">Válasz 3</div>
             </div>
             <div id="kép">
                 <img id="kép1" src="https://kzgzdiag426.blob.core.windows.net/netcore/teszt-0050.jpg" />
             </div>
         </div>
         <div id="vezérlő">
-            <div class="gomb kattintható">Vissza</div>
-            <div class="gomb kattintható">Előre</div>
+            <div id="vissza_gomb" onclick="vissza()" class="gomb kattintható">Vissza</div>
+            <div id="elore_gomb" onclick="előre()" class="gomb kattintható">Előre</div>
         </div>
     </div>
+    <script>
+        var jóVálasz;
+        var questionId = 1;
+        window.onload = function (e) {
+            console.log("Oldal betöltve...");
+            kérdésBetöltés(questionId)
+        }
+        function kérdésBetöltés(id) {
+            fetch(`/questions/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`Hibás válasz: ${response.status}`)
+                    }
+                    else {
+                        return response.json()
+                    }
+                })
+                .then(data => kérdésMegjelenítés(data));
+        }    
+
+        function kérdésMegjelenítés(kérdés) {
+            if (!kérdés) return; //Ha undefined a kérdés objektum, nincs mit tenni
+            console.log(kérdés);
+            document.getElementById("kérdés_szöveg").innerText = kérdés.question1
+            document.getElementById("válasz1").innerText = kérdés.answer1
+            document.getElementById("válasz2").innerText = kérdés.answer2
+            document.getElementById("válasz3").innerText = kérdés.answer3
+            jóVálasz = kérdés.correctAnswer;
+            if (kérdés.image) {
+                document.getElementById("kép1").src = "2018_11_22_Hajozasi_szabalyzat/" + kérdés.image;
+                document.getElementById("kép1").classList.remove("rejtett")
+            }
+            else {
+                document.getElementById("kép1").classList.add("rejtett")
+            }
+            //Jó és rossz kérdések jelölésének levétele
+            document.getElementById("válasz1").classList.remove("jó", "rossz");
+            document.getElementById("válasz2").classList.remove("jó", "rossz");
+            document.getElementById("válasz3").classList.remove("jó", "rossz");
+        }
+
+        function válaszfeldolgozás(válasz) {
+            if (!válasz.ok) {
+                console.error(`Hibás válasz: ${response.status}`)
+            }
+            else {
+                return válasz.json()
+            }
+        }
+        function előre() {
+            questionId++;
+            console.log(questionId);
+            kérdésBetöltés(questionId);
+        }
+
+        function vissza() {
+            questionId--;
+            console.log(questionId);
+            kérdésBetöltés(questionId);
+        }
+        function választás(n) {
+            if (n != jóVálasz) {
+                document.getElementById(`válasz${n}`).classList.add("rossz");
+                document.getElementById(`válasz${jóVálasz}`).classList.add("jó");
+            }
+            else {
+                document.getElementById(`válasz${jóVálasz}`).classList.add("jó");
+            }
+        }
+    </script>
 </body>
 </html>
